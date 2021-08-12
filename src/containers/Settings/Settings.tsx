@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import apiService from './../../utils/apiService';
 
 import './Settings.scss';
@@ -18,11 +18,34 @@ const Settings: React.FC<prop> = ({
   city,
   setCity,
 }) => {
-  let cites = ['Alexandria', 'cairo', 'portsaid'];
+  const [cites, setCites] = useState([]);
+  const [query, setQuery] = useState('');
+
+  const searchHandler = async (q: string) => {
+    if (!q) {
+      setCites([]);
+      return;
+    }
+
+    if (cites.some((s: any) => s.cityCode == q)) {
+      console.log('Selection, Do  change city ');
+      setCites([]);
+      setCity(q);
+      return;
+    }
+
+    try {
+      const citiesList = await getCities(q);
+      setCites(citiesList);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    getCities('alex');
-  }, []);
+    const timeOutId = setTimeout(() => searchHandler(query), 1000);
+    return () => clearTimeout(timeOutId);
+  }, [query]);
 
   const getCities = async (city: string) => {
     try {
@@ -79,25 +102,59 @@ const Settings: React.FC<prop> = ({
         className="city-selection d-flex w-100"
         dir={lang === 'ar' ? 'rtl' : 'ltr'}
       >
-        <div className="city-text">{settingsText.choseCity[lang]} :</div>
-        <select
-          value={city}
-          className="form-select"
-          aria-label="Default select example"
-          onChange={(e) => {
-            console.log('City selected ', e.target.value);
-            setCity(e.target.value);
-          }}
-        >
-          <option selected disabled>
-            {settingsText.choseCity[lang]}
-          </option>
-          {cites.map((city) => {
-            return <option value={city}>{city}</option>;
-          })}
-        </select>
+        <div className="d-flex flex-column p-3">
+          <label htmlFor="search">{settingsText.searchCity[lang]}</label>
+          <input
+            list="searchList"
+            id="search"
+            name="search"
+            placeholder={city}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
+          />
+
+          <datalist id="searchList">
+            {cites.map((searchCity: any) => {
+              return (
+                <option value={searchCity.cityCode}>
+                  {searchCity.cityName} ,{searchCity.countryName}
+                </option>
+              );
+            })}
+          </datalist>
+        </div>
+
+        <div className="currentCityText">
+          {settingsText.currentCity[lang]} <span>{city}</span>
+        </div>
+
+        {/**         <div>
+          <div className="city-text">{settingsText.choseCity[lang]} :</div>
+          <select
+            value={city}
+            className="form-select"
+            aria-label="Default select example"
+            onChange={(e) => {
+              console.log('City selected ', e.target.value);
+              setCity(e.target.value);
+            }}
+          >
+            <option selected disabled>
+              {settingsText.choseCity[lang]}
+            </option>
+            {cites.map((city) => {
+              return <option value={city}>{city}</option>;
+            })}
+          </select>
+        </div>*/}
       </div>
-      <div className="Settings-footer w-100">
+      <div
+        className="Settings-footer w-100"
+        onClick={() => {
+          settingsHandler(false);
+        }}
+      >
         {/*
              <button
           type="button"
@@ -111,6 +168,7 @@ const Settings: React.FC<prop> = ({
         </button>
         
         */}
+        {settingsText.back[lang]}
       </div>
     </div>
   );

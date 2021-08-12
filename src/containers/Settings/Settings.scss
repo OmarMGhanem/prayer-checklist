@@ -45,10 +45,24 @@
   }
   .city-selection {
     flex-grow: 1;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    label {
+      font-weight: bold;
+    }
     select {
       width: auto;
+    }
+    .currentCityText {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    span {
+      color: #198754;
+      font-size: 1.5rem;
+      font-weight: bold;
     }
 
     .city-text {
@@ -59,7 +73,9 @@
 
   .Settings-footer {
     padding: 15px;
-
+    font-weight: bold;
+    color: #f6d66c;
+    cursor: pointer;
     button {
       width: 6rem;
     }

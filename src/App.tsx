@@ -59,19 +59,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    getCities('alex');
-  }, []);
-
-  const getCities = async (city: string) => {
-    try {
-      const res = await apiService.getCites(city);
-      return res?.data;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <div className="App">
       {isSettings ? (
