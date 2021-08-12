@@ -1,0 +1,67 @@
+.Settings-body {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+  .Settings-header {
+    display: flex;
+    // position: absolute;
+    // top: 10px;
+    // right: 10px;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 10px;
+    .prayer-head {
+      font-size: 1.5rem;
+      color: #198754;
+      font-weight: bold;
+      margin-right: 2px;
+    }
+
+    .checklist-head {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .lang-selector {
+      //position: absolute;
+      // left: 10px;
+      // top: 10px;
+      .ar-button {
+        border-radius: 10px 0px 0px 10px;
+        border-width: 1px 0px 1px 1px;
+      }
+
+      .en-button {
+        border-radius: 0px 10px 10px 0px;
+        border-width: 1px 1px 1px 0px;
+      }
+    }
+  }
+  .city-selection {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    select {
+      width: auto;
+    }
+
+    .city-text {
+      font-size: 1rem;
+      padding: 0 10px;
+    }
+  }
+
+  .Settings-footer {
+    padding: 15px;
+
+    button {
+      width: 6rem;
+    }
+  }
+}
