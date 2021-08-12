@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import apiService from './../../utils/apiService';
+
 import './Settings.scss';
 import settingsText from '../../assets/constants/settingsText';
 type prop = {
@@ -18,9 +20,18 @@ const Settings: React.FC<prop> = ({
 }) => {
   let cites = ['Alexandria', 'cairo', 'portsaid'];
 
-  //   useEffect(() => {
-  //     console.log('City Changes ');
-  //   }, [city]);
+  useEffect(() => {
+    getCities('alex');
+  }, []);
+
+  const getCities = async (city: string) => {
+    try {
+      const res = await apiService.getCites(city);
+      return res?.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="Settings-body">
       <div className="Settings-header w-100">
@@ -87,7 +98,8 @@ const Settings: React.FC<prop> = ({
         </select>
       </div>
       <div className="Settings-footer w-100">
-        <button
+        {/*
+             <button
           type="button"
           className="btn btn-light"
           onClick={() => {
@@ -97,6 +109,8 @@ const Settings: React.FC<prop> = ({
         >
           {settingsText.save[lang]}
         </button>
+        
+        */}
       </div>
     </div>
   );

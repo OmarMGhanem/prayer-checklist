@@ -9,5 +9,8 @@
   "action": {
     "default_icon": "logo512.png",
     "default_popup": "popup.html"
-  }
+  },
+
+  "permissions": ["storage"],
+  "host_permissions": ["https://prayertimes.date/api/docs/ajax/*"]
 }
