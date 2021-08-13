@@ -24,6 +24,11 @@ export type dayData = {
   };
 };
 
+export type PrayerWithTime = {
+  id: 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';
+  time: string;
+};
+
 export type dayCheckList = {
   Fajr: boolean;
   Dhuhr: boolean;

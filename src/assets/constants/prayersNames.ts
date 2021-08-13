@@ -1,5 +1,6 @@
+export type id = 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';
 type prayerType = {
-  id: 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';
+  id: id;
   en: string;
   ar: string;
 };
@@ -12,4 +13,13 @@ const prayers: prayerType[] = [
   { id: 'Isha', en: 'Isha', ar: 'عشاء' },
 ];
 
+export const PrayersObj = {
+  Fajr: { en: 'Fajr', ar: 'فجر' },
+  Dhuhr: { en: 'Dhuhr', ar: 'ظهر' },
+  Asr: { en: 'Asr', ar: 'عصر' },
+  Maghrib: { en: 'Maghrib', ar: 'مغرب' },
+  Isha: { en: 'Isha', ar: 'عشاء' },
+};
+
+export const prayersID = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 export default prayers;

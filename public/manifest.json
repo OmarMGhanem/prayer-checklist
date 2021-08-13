@@ -12,5 +12,8 @@
   },
 
   "permissions": ["storage"],
-  "host_permissions": ["https://prayertimes.date/api/docs/ajax/*"]
+  "host_permissions": [
+    "https://prayertimes.date/api/docs/ajax/*",
+    "https://api.pray.zone/v2/times/*"
+  ]
 }
