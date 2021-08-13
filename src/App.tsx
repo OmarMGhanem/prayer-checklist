@@ -7,11 +7,19 @@ import timerHeaderText from './assets/constants/timerHeader';
 import MainContent from './containers/MainContent/MainContent';
 import Settings from './containers/Settings/Settings';
 import { getStoredData, setStoredData } from './utils/storage';
-import { async } from 'q';
+
+import { dayCheckList } from './assets/constants/types';
 function App() {
   const [lang, setLang] = useState<'ar' | 'en'>('ar');
   const [isSettings, setSettings] = useState(false);
-  const [city, setCity] = useState('Alexandria');
+  const [city, setCity] = useState('alexandria');
+  const [dayCheckList, setCheckList] = useState<dayCheckList>({
+    Fajr: false,
+    Dhuhr: false,
+    Asr: false,
+    Maghrib: false,
+    Isha: false,
+  });
   const langHandler = (lang: 'ar' | 'en') => {
     setLang(lang);
     setStoredData('lang', lang);
@@ -26,14 +34,29 @@ function App() {
     setStoredData('city', city);
   };
 
+  const checkListHandler = (prayId: string, state: boolean) => {
+    setCheckList((oldState) => {
+      return {
+        ...oldState,
+        [prayId]: state,
+      };
+    });
+  };
+
   useEffect(() => {
     checkForLang();
     checkForCity();
+    checkForChecklist();
   }, []);
+
+  useEffect(() => {
+    console.log('checklist  Changed to ', dayCheckList);
+    setStoredData('dayCheckList', dayCheckList);
+  }, [dayCheckList]);
 
   const checkForLang = async () => {
     try {
-      const tempLang = await getStoredData('lang');
+      const tempLang = await getStoredData<string>('lang');
 
       if (tempLang && (tempLang === 'en' || tempLang === 'ar')) {
         setLang(tempLang);
@@ -47,12 +70,28 @@ function App() {
 
   const checkForCity = async () => {
     try {
-      const tempCity: any = await getStoredData('city');
+      const tempCity = await getStoredData<string>('city');
 
       if (tempCity) {
         setCity(tempCity);
       } else {
         await setStoredData('city', city);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const checkForChecklist = async () => {
+    try {
+      const checklist = await getStoredData<dayCheckList>('dayCheckList');
+
+      if (checklist) {
+        console.log('Found CheckList Data', checklist);
+        setCheckList(checklist);
+      } else {
+        console.log('No CheckList Data ');
+        setStoredData('dayCheckList', dayCheckList);
       }
     } catch (err) {
       console.error(err);
@@ -70,7 +109,12 @@ function App() {
           setCity={cityHandler}
         />
       ) : (
-        <MainContent lang={lang} settingsHandler={settingsHandler} />
+        <MainContent
+          lang={lang}
+          settingsHandler={settingsHandler}
+          checkListHandler={checkListHandler}
+          dayCheckList={dayCheckList}
+        />
       )}
     </div>
   );

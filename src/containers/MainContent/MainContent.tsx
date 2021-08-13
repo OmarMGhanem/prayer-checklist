@@ -3,14 +3,23 @@ import './MainContent.scss';
 import prayers from '../../assets/constants/prayersNames';
 import timerHeaderText from '../../assets/constants/timerHeader';
 import { ReactComponent as GearIcon } from '../../assets/images/gear-fill.svg';
-
+import { dayCheckList } from '../../assets/constants/types';
 type prop = {
   lang: 'ar' | 'en';
 
   settingsHandler: (flag: boolean) => void;
+  checkListHandler: (id: string, state: boolean) => void;
+  dayCheckList: dayCheckList;
 };
 
-const MainContent: React.FC<prop> = ({ lang, settingsHandler }) => {
+const onSelection = () => {};
+
+const MainContent: React.FC<prop> = ({
+  lang,
+  settingsHandler,
+  checkListHandler,
+  dayCheckList,
+}) => {
   return (
     <div className="App-body">
       <div className="app-header w-100">
@@ -33,14 +42,17 @@ const MainContent: React.FC<prop> = ({ lang, settingsHandler }) => {
       >
         <div className="check-list-container d-flex  w-100">
           <ul d-flex flex-column>
-            {prayers[lang].map((prayers) => {
+            {prayers.map((prayer) => {
               return (
                 <li>
-                  {prayers}
+                  {prayer[lang]}
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
+                    checked={dayCheckList[prayer.id]}
+                    onChange={(e) => {
+                      checkListHandler(prayer.id, e.target.checked);
+                    }}
                   />
                 </li>
               );

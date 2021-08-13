@@ -1,7 +1,7 @@
-export const getStoredData = async (key: string) => {
-  return new Promise((resolve, reject) => {
+export const getStoredData = async <Type>(key: string) => {
+  return new Promise<Type>((resolve, reject) => {
     try {
-      chrome.storage.sync.get(key, (value: any) => {
+      chrome.storage.sync.get(key, (value) => {
         resolve(value[key]);
       });
     } catch (ex) {
@@ -12,10 +12,8 @@ export const getStoredData = async (key: string) => {
 };
 
 export const setStoredData = async (key: string, value: any) => {
-  let storeObj: any = {};
-  storeObj[key] = value;
   try {
-    await chrome.storage.sync.set(storeObj);
+    await chrome.storage.sync.set({ [key]: value });
   } catch (err) {
     console.error(err);
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import apiService from './../../utils/apiService';
-
+import { city } from '../../assets/constants/types';
 import './Settings.scss';
 import settingsText from '../../assets/constants/settingsText';
 type prop = {
@@ -18,7 +18,7 @@ const Settings: React.FC<prop> = ({
   city,
   setCity,
 }) => {
-  const [cites, setCites] = useState([]);
+  const [cites, setCites] = useState<city[]>([]);
   const [query, setQuery] = useState('');
 
   const searchHandler = async (q: string) => {
@@ -27,7 +27,7 @@ const Settings: React.FC<prop> = ({
       return;
     }
 
-    if (cites.some((s: any) => s.cityCode == q)) {
+    if (cites.some((s: city) => s.cityCode == q)) {
       console.log('Selection, Do  change city ');
       setCites([]);
       setCity(q);
@@ -115,7 +115,7 @@ const Settings: React.FC<prop> = ({
           />
 
           <datalist id="searchList">
-            {cites.map((searchCity: any) => {
+            {cites.map((searchCity: city) => {
               return (
                 <option value={searchCity.cityCode}>
                   {searchCity.cityName} ,{searchCity.countryName}
