@@ -56,14 +56,21 @@ function App() {
     checkForCity();
     checkForChecklist();
     checkForDayData();
-
-    const res = apiService.getDayData('alexandria');
   }, []);
 
   useEffect(() => {
-    console.log('checklist  Changed to ', dayCheckList);
     setStoredData('dayCheckList', dayCheckList);
   }, [dayCheckList]);
+
+  const clearCheckList = () => {
+    setCheckList({
+      Fajr: false,
+      Dhuhr: false,
+      Asr: false,
+      Maghrib: false,
+      Isha: false,
+    });
+  };
 
   const checkForLang = async () => {
     try {
@@ -98,10 +105,8 @@ function App() {
       const checklist = await getStoredData<dayCheckList>('dayCheckList');
 
       if (checklist) {
-        console.log('Found CheckList Data', checklist);
         setCheckList(checklist);
       } else {
-        console.log('No CheckList Data ');
         setStoredData('dayCheckList', dayCheckList);
       }
     } catch (err) {
@@ -114,20 +119,20 @@ function App() {
       const storedDayData = await getStoredData<dayData>('dayData');
 
       if (storedDayData) {
-        console.log('found dayData', storedDayData);
-        const todayTime = new Date();
-        if (
-          todayTime.toISOString().split('T')[0] === storedDayData.date.gregorian
-        ) {
-          console.log('same Day no need for request');
+        const rawTodayTime = new Date();
+        const timearray = rawTodayTime.toLocaleDateString().split('/');
+        const todayTime =
+          timearray[2] + '-' + timearray[0] + '-' + timearray[1];
+
+        if (todayTime === storedDayData.date.gregorian) {
           // set next prayer logic
           getNextPryerId(storedDayData);
         } else {
-          console.log('days are not the same ');
           getPrayersTime(city);
+          //clear checklist
+          clearCheckList();
         }
       } else {
-        console.log('No dayData ');
         getPrayersTime(city);
       }
     } catch (err) {
@@ -138,7 +143,7 @@ function App() {
   const getPrayersTime = async (city: string) => {
     const res = await apiService.getDayData(city);
     const dayData: dayData = res?.data.results.datetime[0];
-    console.log('Here is dayData', dayData);
+
     await setStoredData('dayData', dayData);
     getNextPryerId(dayData);
     // set next prayer logic
@@ -147,19 +152,20 @@ function App() {
   const getNextPryerId = (dayData: dayData) => {
     const localTime = new Date();
     const times = Object.entries(dayData.times);
+    setNextPray(times[2] as typeof nextPray);
     const localHours = localTime.toLocaleString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
     });
     for (const time of times) {
-      if (prayersID.includes(time[0]))
+      if (prayersID.includes(time[0])) {
         if (compareTimes(localHours, time[1])) {
-          console.log('Next prayer ID is: ', time[0]);
           setNextPray(time as typeof nextPray);
-        } else {
-          setNextPray(times[2] as typeof nextPray);
+
+          break;
         }
+      }
     }
   };
 

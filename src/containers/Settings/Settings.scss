@@ -51,6 +51,19 @@
     label {
       font-weight: bold;
     }
+
+    input {
+      border-radius: 10px;
+      padding: 10px;
+      border-width: 0;
+    }
+
+    input:focus {
+      outline: none !important;
+
+      box-shadow: 0 0 10px #198754;
+    }
+
     select {
       width: auto;
     }

@@ -28,7 +28,6 @@ const Settings: React.FC<prop> = ({
     }
 
     if (cites.some((s: city) => s.cityCode == q)) {
-      console.log('Selection, Do  change city ');
       setCites([]);
       setCity(q);
       return;
