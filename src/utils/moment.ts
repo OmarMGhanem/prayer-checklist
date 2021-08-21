@@ -7,3 +7,10 @@ export const compareTimes = (timeA: string, timeB: string) => {
 
   return firstMoment.isBefore(secMoment);
 };
+
+export const isSameDay = (timeA: number, timeB: number) => {
+  const firstMoment = moment(timeA);
+  const secMoment = moment(timeB);
+
+  return firstMoment.isSame(secMoment, 'day');
+};

@@ -24,7 +24,6 @@ class apiService {
 
   getDayData(city: string) {
     const fullUrl = this.endpoint + 'today.json';
-    let result;
     try {
       const res = axios.request({
         baseURL: fullUrl,
@@ -33,6 +32,7 @@ class apiService {
           city,
           school: 5,
           timeformat: 1,
+          timestamp: Date.now(),
         },
       });
 

@@ -7,7 +7,7 @@ import timerHeaderText from './assets/constants/timerHeader';
 import MainContent from './containers/MainContent/MainContent';
 import Settings from './containers/Settings/Settings';
 import { getStoredData, setStoredData } from './utils/storage';
-import { compareTimes } from './utils/moment';
+import { compareTimes, isSameDay } from './utils/moment';
 import { city, dayCheckList, dayData } from './assets/constants/types';
 
 function App() {
@@ -120,11 +120,10 @@ function App() {
 
       if (storedDayData) {
         const rawTodayTime = new Date();
-        const timearray = rawTodayTime.toLocaleDateString().split('/');
-        const todayTime =
-          timearray[2] + '-' + timearray[0] + '-' + timearray[1];
 
-        if (todayTime === storedDayData.date.gregorian) {
+        if (
+          isSameDay(rawTodayTime.getTime(), storedDayData.date.timestamp * 1000)
+        ) {
           // set next prayer logic
           getNextPryerId(storedDayData);
         } else {
@@ -152,6 +151,7 @@ function App() {
   const getNextPryerId = (dayData: dayData) => {
     const localTime = new Date();
     const times = Object.entries(dayData.times);
+    let tempPrayer: typeof nextPray = ['Fajr', '03:40 AM'];
     setNextPray(times[2] as typeof nextPray);
     const localHours = localTime.toLocaleString('en-US', {
       hour: '2-digit',
@@ -161,12 +161,13 @@ function App() {
     for (const time of times) {
       if (prayersID.includes(time[0])) {
         if (compareTimes(localHours, time[1])) {
-          setNextPray(time as typeof nextPray);
+          tempPrayer = time as typeof nextPray;
 
           break;
         }
       }
     }
+    setNextPray(tempPrayer);
   };
 
   return (
